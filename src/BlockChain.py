@@ -33,13 +33,13 @@ class BlockChain:
             raise ValueError('malformated URL')
     
 
-    def NewBlock(self, proof, prevHash):
+    def NewBlock(self, prevHash, proof):
 
         block = Block(len(self.Chain) + 1,
          time(),
          self.currentTransactions, 
          proof, 
-         prevHash or self.hash(self.Chain[-1]))
+         prevHash or self.hash(self.LastBlock))
 
         # Reset the current list of transactions
         self.currentTransactions = []
@@ -47,6 +47,25 @@ class BlockChain:
         self.Chain.append(block)
 
         return block
+
+
+    def NewTransaction(self, sender, recipient, amount):
+        self.currentTransactions.append(
+            Transaction(sender=sender,
+             recipient=recipient,
+              amount=amount)
+        )
+
+        return self.LastBlock.Index + 1
+
+
+    @property
+    def LastBlock(self):
+        return self.Chain[-1]
+
+
+    def Hash(block):
+        return hashlib.sha256(str(block).encode()).hexdigest()
 
 if __name__ == "__main__":
     chain = BlockChain()

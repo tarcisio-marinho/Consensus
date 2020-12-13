@@ -9,4 +9,9 @@ class Block:
         self.prevHash = prevHash 
 
     def __str__(self):
-        return json.dumps(self)
+        return json.dumps(self.__dict__, sort_keys=True)
+
+if __name__ == "__main__":
+    from time import time
+    b = Block(5, time(), ['test', 'test2'], 42, 4)
+    print(b)
