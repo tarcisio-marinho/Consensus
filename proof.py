@@ -4,11 +4,11 @@ from datetime import timedelta
 
 class ProofOfWork:
     
-    Start = 1
-    Zeros = 4
+    
         
     def __init__(self, zeros=4):
-        Zeros = zeros
+        self.Start = 1
+        self.Zeros = zeros
 
     def run(self):
         self.Proof()
@@ -30,7 +30,7 @@ class ProofOfWork:
 if __name__ == "__main__":
     start = timer()
     
-    worker = ProofOfWork()
+    worker = ProofOfWork(zeros=5)
     worker.run()
     
     end = timer()
