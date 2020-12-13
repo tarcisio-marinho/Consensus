@@ -15,6 +15,7 @@ class BlockChain:
         self.Chain = []
         self.Nodes = set()
         self.Zeros = zeros
+        self.ChainEndpoint = 'chain'
 
         # Create the genesis block
         self.NewBlock(prevHash='1', proof=100)
@@ -86,6 +87,58 @@ class BlockChain:
     @staticmethod
     def Hash(block):
         return hashlib.sha256(str(block).encode()).hexdigest()
+
+
+
+    def ResolveConflicts(self):
+        # Return true if consensus achieved by update, otherwise, false
+        newChain = None
+
+        maxLen = len(self.Chain)
+
+        for node in self.Nodes:
+            response = requests.get(f'https://{node}/{self.ChainEndpoint}')
+
+            if response.status_code == 200:
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                if length > maxLen and self.ValidProof(chain):
+                    maxLen = length
+                    newChain = chain
+
+        if newChain:
+            self.Chain = newChain
+            return True
+
+        return False
+
+
+    def ValidChain(self, chain):
+
+        lastBlock = Chain[0]
+        currIndex = 1
+
+        while currIndex < len(chain):
+            block = chain[currIndex]
+            print(f'{lastBlock}')
+            print(f'{block}')
+            print("\n-----------\n")
+            # Check if the hash is correct
+            lastBlockHash = self.hash(lastBlock)
+            if block['previous_hash'] != lastBlockHash:
+                return False
+
+            # Check if Proof of Work is correct
+            if not self.ValidProof(lastBlock.Proof, block.Proof, lastBlockHash):
+                return False
+
+            lastBlock = block
+            currIndex += 1
+
+        return True
+
+
 
 if __name__ == "__main__":
     from time import time
