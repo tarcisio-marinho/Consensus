@@ -10,13 +10,32 @@ from Block import Block
 
 class BlockChain:
 
-    def __init__(self):
+    def __init__(self, zeros=4):
         self.currentTransactions = []
         self.Chain = []
         self.Nodes = set()
-        
+        self.Zeros = zeros
+
         # Create the genesis block
         self.NewBlock(prevHash='1', proof=100)
+
+
+    def ProofOfWork(self, lastBlock):
+
+        lastProof = LastBlock.Proof
+        lastHash = self.Hash(lastBlock)
+
+        proof = 0
+        while not self.ValidProof(lastProof, proof, lastHash):
+            proof += 1
+
+        return proof
+
+
+    def ValidProof(lastProof, proof, lastHash):
+        guess = f'{lastProof}{proof}{lastHash}'.encode()
+        guessHash = hashlib.sha256(guess).hexdigest()
+        return guessHash[:4] == "0" * self.Zeros
 
 
     def RegisterNode(self, address):
@@ -64,8 +83,18 @@ class BlockChain:
         return self.Chain[-1]
 
 
+    @staticmethod
     def Hash(block):
         return hashlib.sha256(str(block).encode()).hexdigest()
 
 if __name__ == "__main__":
-    chain = BlockChain()
+    from time import time
+
+    chain = BlockChain(4)
+    
+    block = Block(index=3, timestamp=time(), 
+    transactions=[1243], proof=42, prevHash=2)
+
+    hash = chain.Hash(block)
+
+    print(hash)
