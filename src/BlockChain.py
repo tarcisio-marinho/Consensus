@@ -7,6 +7,7 @@ from uuid import uuid4
 import requests
 
 from Block import Block
+from Transaction import Transaction
 
 class BlockChain:
 
@@ -36,7 +37,7 @@ class BlockChain:
     def ValidProof(lastProof, proof, lastHash):
         guess = f'{lastProof}{proof}{lastHash}'.encode()
         guessHash = hashlib.sha256(guess).hexdigest()
-        return guessHash[:4] == "0" * self.Zeros
+        return guessHash[:self.Zeros] == "0" * self.Zeros
 
 
     def RegisterNode(self, address):

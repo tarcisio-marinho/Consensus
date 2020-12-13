@@ -24,7 +24,7 @@ class ProofOfWork:
         guess = f'{lastProof}{proof}'.encode()
         guessHash = hashlib.sha256(guess).hexdigest()
         print(proof, guessHash)
-        return guessHash[:4] == "0" * self.Zeros
+        return guessHash[:self.Zeros] == "0" * self.Zeros
 
 
 if __name__ == "__main__":

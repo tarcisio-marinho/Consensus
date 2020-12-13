@@ -2,11 +2,11 @@ import json
 
 class Block:
     def __init__(self, index, timestamp, transactions, proof, prevHash):
-        self.index = index
-        self.timestamp = timestamp
-        self.transactions = transactions
-        self.proof = proof
-        self.prevHash = prevHash 
+        self.Index = index
+        self.Timestamp = timestamp
+        self.Transactions = transactions
+        self.Proof = proof
+        self.PrevHash = prevHash 
 
     def __str__(self):
         return json.dumps(self.__dict__, sort_keys=True)
